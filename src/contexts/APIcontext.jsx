@@ -20,7 +20,7 @@ export function ApiContextProvider({ children }) {
   const getMeteoriteData = async () => {
     try {
       const response = await axios.get(NASA_METEORITE_API);
-      const data = response.data.slice(0, NUMBER); // limit to NUMBER items
+      const data = response.data.slice(0, NUMBER);
       setMeteoriteData(data);
       setFilteredSearchInput(data);
     } catch (error) {
