@@ -1,2 +1,2 @@
-export const PUBLIC_API_URL = "https://data.nasa.gov/resource/gh4g-9sfh.json";
-export const APP_TOKEN = "rsVxlQZmCM4Ufhi89znlYIfAQ";
+// src/constants/url.js
+export const NASA_METEORITE_API = "/data/meteorites.json";

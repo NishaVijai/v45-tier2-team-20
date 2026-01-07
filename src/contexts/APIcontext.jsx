@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
-import { APP_TOKEN, PUBLIC_API_URL } from "../constants/urls";
+import { NASA_METEORITE_API } from "../constants/urls";
 
 const ApiContext = createContext();
 
-const NUMBER = 50000;
+const NUMBER = 5000; // Number of items to load initially
 
 export function useApiContext() {
   return useContext(ApiContext);
@@ -13,20 +13,27 @@ export function useApiContext() {
 
 export function ApiContextProvider({ children }) {
   const [meteoriteData, setMeteoriteData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [filteredSearchInput, setfilteredSearchInput] = useState(meteoriteData);
+  const [filteredSearchInput, setFilteredSearchInput] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getMeteoriteDataWithAxios = async () => {
-    setLoading(true);
-    const response = await axios.get(
-      `${PUBLIC_API_URL}?$limit=${NUMBER}&$$app_token=${APP_TOKEN}`
-    );
-    setMeteoriteData(response.data);
-    setLoading(false);
+  // Fetch data from local JSON
+  const getMeteoriteData = async () => {
+    try {
+      const response = await axios.get(NASA_METEORITE_API);
+      const data = response.data.slice(0, NUMBER); // limit to NUMBER items
+      setMeteoriteData(data);
+      setFilteredSearchInput(data);
+    } catch (error) {
+      console.error("Failed to fetch meteorite data:", error);
+      setMeteoriteData([]);
+      setFilteredSearchInput([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    getMeteoriteDataWithAxios();
+    getMeteoriteData();
   }, []);
 
   return (
@@ -34,7 +41,7 @@ export function ApiContextProvider({ children }) {
       value={{
         meteoriteData,
         filteredSearchInput,
-        setfilteredSearchInput,
+        setFilteredSearchInput,
         loading,
         setLoading,
       }}
@@ -45,5 +52,5 @@ export function ApiContextProvider({ children }) {
 }
 
 ApiContextProvider.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.node.isRequired,
 };

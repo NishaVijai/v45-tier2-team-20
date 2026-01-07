@@ -1,5 +1,4 @@
-import React from "react";
-
+import PropTypes from "prop-types";
 import { usePagination, DOTS } from "./usePagination";
 
 export const Pagination = (props) => {
@@ -30,7 +29,8 @@ export const Pagination = (props) => {
     onPageChange(currentPage - 1);
   };
 
-  let lastPage = paginationRange[paginationRange.length - 1];
+  const lastPage = paginationRange[paginationRange.length - 1];
+
   return (
     <nav aria-label="Page navigation example">
       <ul className="flex items-center -space-x-px h-10 text-base">
@@ -57,6 +57,7 @@ export const Pagination = (props) => {
             </svg>
           </a>
         </li>
+
         {paginationRange.map((pageNumber, index) => {
           if (pageNumber === DOTS) {
             return (
@@ -87,6 +88,7 @@ export const Pagination = (props) => {
             </li>
           );
         })}
+
         <li onClick={onNext} disabled={currentPage === lastPage}>
           <a
             href="#"
@@ -113,4 +115,13 @@ export const Pagination = (props) => {
       </ul>
     </nav>
   );
+};
+
+// -------------------- PropTypes --------------------
+Pagination.propTypes = {
+  onPageChange: PropTypes.func.isRequired,    // Callback when page changes
+  totalCount: PropTypes.number.isRequired,   // Total number of items
+  siblingCount: PropTypes.number,            // Optional, default = 1
+  currentPage: PropTypes.number.isRequired,  // Current page number
+  pageSize: PropTypes.number.isRequired,     // Number of items per page
 };
